@@ -32,7 +32,7 @@ import java.util.List;
  * A login screen that offers login via email/password.
  * 
  */
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
 	/**
@@ -193,7 +193,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 		}
 	}
 
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	@Override
 	public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
 		return new CursorLoader(this,
