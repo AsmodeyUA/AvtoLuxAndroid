@@ -2,6 +2,7 @@ package ua.uz.avtolux;
 
 import android.support.v7.app.ActionBarActivity;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -29,10 +30,12 @@ public class MainActivity extends ActionBarActivity {
         button.setId(1);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(final View v) {
-        		setContentView(R.layout.activity_login);
+        		
                 Toast.makeText(getApplicationContext(),
                         "Buttonclicked: ",
                         Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
             	}
             });
         final TableLayout llayer = new TableLayout(this);
