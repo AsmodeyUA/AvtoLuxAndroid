@@ -17,6 +17,7 @@ public class MainActivity extends ActionBarActivity {
 	
 	LoginActivity logActivity = new LoginActivity();
 
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -30,7 +31,7 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(final View v) {
         		setContentView(R.layout.activity_login);
                 Toast.makeText(getApplicationContext(),
-                        "Button: ",
+                        "Buttonclicked: ",
                         Toast.LENGTH_SHORT).show();
             	}
             });

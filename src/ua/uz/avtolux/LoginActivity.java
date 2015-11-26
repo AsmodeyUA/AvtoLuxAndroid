@@ -25,8 +25,16 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONArray;
+
+import com.androidquery.AQuery;
+import com.androidquery.callback.AjaxCallback;
+import com.androidquery.callback.AjaxStatus;
 
 /**
  * A login screen that offers login via email/password.
@@ -60,28 +68,31 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 		mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 		populateAutoComplete();
 
+		mLoginFormView = findViewById(R.id.login_form);
+		mProgressView = findViewById(R.id.login_progress);
+		Toast.makeText(getApplicationContext(), "Error:1", Toast.LENGTH_LONG).show();        
 		mPasswordView = (EditText) findViewById(R.id.password);
 		mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
 				if (id == R.id.login || id == EditorInfo.IME_NULL) {
+					Toast.makeText(getApplicationContext(), "Error:2", Toast.LENGTH_LONG).show();
 					attemptLogin();
 					return true;
 				}
 				return false;
 			}
-		});
 
-		Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+		});
+	
+		final Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
 		mEmailSignInButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
+				mEmailSignInButton.setText("Donee");
 				attemptLogin();
 			}
 		});
-
-		mLoginFormView = findViewById(R.id.login_form);
-		mProgressView = findViewById(R.id.login_progress);
 	}
 
 	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
@@ -101,6 +112,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 	 * errors are presented and no actual login attempt is made.
 	 */
 	public void attemptLogin() {
+		Toast.makeText(getApplicationContext(), "Error:1", Toast.LENGTH_LONG).show();
 		if (mAuthTask != null) {
 			return;
 		}
@@ -142,7 +154,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 			// Show a progress spinner, and kick off a background task to
 			// perform the user login attempt.
 			showProgress(true);
-			mAuthTask = new UserLoginTask(email, password);
+			mAuthTask = new UserLoginTask( email, password);
 			mAuthTask.execute((Void) null);
 		}
 	}
@@ -293,6 +305,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 		protected Boolean doInBackground(Void... params) {
 			// TODO: attempt authentication against a network service.
 
+			getAjaxReplyLogin(mEmail, mPassword);
+			
 			try {
 				// Simulate network access.
 				Thread.sleep(2000);
@@ -311,6 +325,40 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 			// TODO: register the new account here.
 			return true;
 		}
+		
+		public String getAjaxReplyLogin(String user,String pass){
+			String request = "";
+	        final AQuery aq = new AQuery(getApplicationContext());
+
+	        String url = new StringBuilder().append("http://avtolux.uz.ua/flow.php?user=").append(user)
+	        		.append("&password=")
+	                .append(pass).toString();
+
+	        aq.ajax(url, JSONArray.class, new AjaxCallback<JSONArray>() {
+
+				@Override
+	            public void callback(String url, JSONArray jSONArrayTemp, AjaxStatus status) {
+
+
+					if (jSONArrayTemp != null) {
+	                    Toast.makeText(aq.getContext(), "Error:" +jSONArrayTemp.toString(), Toast.LENGTH_LONG).show();
+
+	                    //successful ajax call, show status code and json content
+	                } else {
+
+	                    //ajax error, show error code
+	                    Toast.makeText(aq.getContext(), "Error:" + status.getMessage(), Toast.LENGTH_LONG).show();
+
+	                }
+	            }
+	        });
+
+	        
+	        
+	        
+			return request;
+		}
+
 
 		@Override
 		protected void onPostExecute(final Boolean success) {
