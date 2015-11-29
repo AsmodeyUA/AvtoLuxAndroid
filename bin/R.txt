@@ -605,7 +605,7 @@ int string abc_searchview_description_voice 0x7f0a000c
 int string abc_shareactionprovider_share_with 0x7f0a0010
 int string abc_shareactionprovider_share_with_application 0x7f0a000f
 int string abc_toolbar_collapse_description 0x7f0a0004
-int string action_settings 0x7f0a0016
+int string action_settings 0x7f0a0015
 int string action_sign_in 0x7f0a001a
 int string action_sign_in_short 0x7f0a001b
 int string app_name 0x7f0a0014
@@ -613,11 +613,11 @@ int string error_field_required 0x7f0a001f
 int string error_incorrect_password 0x7f0a001e
 int string error_invalid_email 0x7f0a001c
 int string error_invalid_password 0x7f0a001d
-int string hello_world 0x7f0a0015
 int string prompt_email 0x7f0a0018
 int string prompt_password 0x7f0a0019
 int string status_bar_notification_info_overflow 0x7f0a0011
 int string title_activity_login 0x7f0a0017
+int string user_name 0x7f0a0016
 int style AlertDialog_AppCompat 0x7f0b0042
 int style AlertDialog_AppCompat_Light 0x7f0b0043
 int style Animation_AppCompat_Dialog 0x7f0b0049

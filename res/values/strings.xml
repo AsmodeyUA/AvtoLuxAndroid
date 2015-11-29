@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">AvtoLuxUzUa</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="user_name">NOT REGISTERED USER</string>
 
 </resources>

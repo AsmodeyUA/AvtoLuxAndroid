@@ -2251,7 +2251,7 @@ containing a value of this type.
         /**  Content description for the Toolbar icon used to collapse an expanded action mode. [CHAR LIMIT=NONE] 
          */
         public static final int abc_toolbar_collapse_description=0x7f0a0004;
-        public static final int action_settings=0x7f0a0016;
+        public static final int action_settings=0x7f0a0015;
         public static final int action_sign_in=0x7f0a001a;
         public static final int action_sign_in_short=0x7f0a001b;
         public static final int app_name=0x7f0a0014;
@@ -2259,7 +2259,6 @@ containing a value of this type.
         public static final int error_incorrect_password=0x7f0a001e;
         public static final int error_invalid_email=0x7f0a001c;
         public static final int error_invalid_password=0x7f0a001d;
-        public static final int hello_world=0x7f0a0015;
         /**  Strings related to login 
          */
         public static final int prompt_email=0x7f0a0018;
@@ -2272,6 +2271,7 @@ containing a value of this type.
          */
         public static final int status_bar_notification_info_overflow=0x7f0a0011;
         public static final int title_activity_login=0x7f0a0017;
+        public static final int user_name=0x7f0a0016;
     }
     public static final class style {
         public static final int AlertDialog_AppCompat=0x7f0b0042;

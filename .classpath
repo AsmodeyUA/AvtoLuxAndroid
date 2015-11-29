@@ -5,8 +5,8 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
-	<classpathentry exported="true" kind="lib" path="/home/asmodeyz/workspace/AvtoLuxUzUa/libs/android-query-full.0.26.7.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/asmodeyz/workspace/AvtoLuxUzUa/libs/httpcore-4.4.3.jar"/>
-	<classpathentry exported="true" kind="lib" path="/home/asmodeyz/workspace/AvtoLuxUzUa/libs/httpclient-4.5.1.jar"/>
+	<classpathentry kind="lib" path="/home/asmodey/work/workspN1/libs/httpcore-4.4.3.jar"/>
+	<classpathentry kind="lib" path="/home/asmodey/work/workspN1/libs/httpclient-4.5.1.jar"/>
+	<classpathentry kind="lib" path="/home/asmodey/work/workspN1/libs/android-query-full.0.26.7.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
