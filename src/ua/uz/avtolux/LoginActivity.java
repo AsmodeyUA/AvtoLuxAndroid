@@ -29,7 +29,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 import java.util.List;
-//test comment
+
 
 /**
  * A login screen that offers login via email/password.
