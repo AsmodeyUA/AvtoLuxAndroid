@@ -1,7 +1,5 @@
 package ua.uz.avtolux;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
@@ -25,16 +23,13 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+
 import java.util.List;
 
-import org.json.JSONArray;
-
-import com.androidquery.AQuery;
-import com.androidquery.callback.AjaxCallback;
-import com.androidquery.callback.AjaxStatus;
 
 /**
  * A login screen that offers login via email/password.
@@ -47,16 +42,16 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 	 * A dummy authentication store containing known user names and passwords.
 	 * TODO: remove after connecting to a real authentication system.
 	 */
+	@SuppressWarnings("unused")
 	private static final String[] DUMMY_CREDENTIALS = new String[] { "foo@example.com:hello", "bar@example.com:world" };
-	/**
-	 * Keep track of the login task to ensure we can cancel it if requested.
-	 */
-	private UserLoginTask mAuthTask = null;
+
 
 	// UI references.
 	private AutoCompleteTextView mEmailView;
 	private EditText mPasswordView;
+	@SuppressWarnings("unused")
 	private View mProgressView;
+	@SuppressWarnings("unused")
 	private View mLoginFormView;
 
 	@Override
@@ -69,15 +64,18 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 		populateAutoComplete();
 
 		mLoginFormView = findViewById(R.id.login_form);
-		mProgressView = findViewById(R.id.login_progress);
-		Toast.makeText(getApplicationContext(), "Error:1", Toast.LENGTH_LONG).show();        
+		mProgressView = findViewById(R.id.login_progress);      
 		mPasswordView = (EditText) findViewById(R.id.password);
 		mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
 				if (id == R.id.login || id == EditorInfo.IME_NULL) {
-					Toast.makeText(getApplicationContext(), "Error:2", Toast.LENGTH_LONG).show();
-					attemptLogin();
+					try {
+						attemptLogin();
+					} catch (NoSuchAlgorithmException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					return true;
 				}
 				return false;
@@ -90,7 +88,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 			@Override
 			public void onClick(View view) {
 				mEmailSignInButton.setText("Donee");
-				attemptLogin();
+				try {
+					attemptLogin();
+				} catch (NoSuchAlgorithmException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		});
 	}
@@ -110,12 +113,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 	 * Attempts to sign in or register the account specified by the login form.
 	 * If there are form errors (invalid email, missing fields, etc.), the
 	 * errors are presented and no actual login attempt is made.
+	 * @throws NoSuchAlgorithmException 
 	 */
-	public void attemptLogin() {
-		Toast.makeText(getApplicationContext(), "Error:1", Toast.LENGTH_LONG).show();
-		if (mAuthTask != null) {
-			return;
-		}
+	public void attemptLogin() throws NoSuchAlgorithmException {
 
 		// Reset errors.
 		mEmailView.setError(null);
@@ -124,6 +124,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 		// Store values at the time of the login attempt.
 		String email = mEmailView.getText().toString();
 		String password = mPasswordView.getText().toString();
+
 
 		boolean cancel = false;
 		View focusView = null;
@@ -140,28 +141,34 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 			mEmailView.setError(getString(R.string.error_field_required));
 			focusView = mEmailView;
 			cancel = true;
-		} else if (!isEmailValid(email)) {
-			mEmailView.setError(getString(R.string.error_invalid_email));
-			focusView = mEmailView;
-			cancel = true;
-		}
+		} ;
+//		else if (!isEmailValid(email)) {
+//			mEmailView.setError(getString(R.string.error_invalid_email));
+//			focusView = mEmailView;
+//			cancel = true;
+//		}
 
 		if (cancel) {
 			// There was an error; don't attempt login and focus the first
 			// form field with an error.
 			focusView.requestFocus();
 		} else {
-			// Show a progress spinner, and kick off a background task to
-			// perform the user login attempt.
-			showProgress(true);
-			mAuthTask = new UserLoginTask( email, password);
-			mAuthTask.execute((Void) null);
-		}
-	}
+	
+	        MessageDigest md = MessageDigest.getInstance("MD5");
+	        md.update(password.getBytes());
+	
+	        byte[] resultByte = md.digest();
 
-	private boolean isEmailValid(String email) {
-		// TODO: Replace this with your own logic
-		return email.contains("@");
+	        BigInteger bigInt = new BigInteger(1,resultByte);
+	        String hashtext = bigInt.toString(16);
+	        // Now we need to zero pad it if you actually want the full 32 chars.
+	        while(hashtext.length() < 32 ){
+	          hashtext = "0"+hashtext;
+	        }
+	        
+	        SiteApi.savePass(getApplicationContext(),email,hashtext);
+			finish();		
+		}
 	}
 
 	private boolean isPasswordValid(String password) {
@@ -172,39 +179,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 	/**
 	 * Shows the progress UI and hides the login form.
 	 */
-	@TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-	public void showProgress(final boolean show) {
-		// On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-		// for very easy animations. If available, use these APIs to fade-in
-		// the progress spinner.
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-			int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-			mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-			mLoginFormView.animate().setDuration(shortAnimTime).alpha(show ? 0 : 1)
-					.setListener(new AnimatorListenerAdapter() {
-						@Override
-						public void onAnimationEnd(Animator animation) {
-							mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-						}
-					});
-
-			mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-			mProgressView.animate().setDuration(shortAnimTime).alpha(show ? 1 : 0)
-					.setListener(new AnimatorListenerAdapter() {
-						@Override
-						public void onAnimationEnd(Animator animation) {
-							mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-						}
-					});
-		} else {
-			// The ViewPropertyAnimator APIs are not available, so simply show
-			// and hide the relevant UI components.
-			mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-			mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-		}
-	}
-
+	
 	@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 	@Override
 	public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
@@ -246,6 +221,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 				ContactsContract.CommonDataKinds.Email.IS_PRIMARY, };
 
 		int ADDRESS = 0;
+		@SuppressWarnings("unused")
 		int IS_PRIMARY = 1;
 	}
 
@@ -287,96 +263,5 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 		mEmailView.setAdapter(adapter);
 	}
 
-	/**
-	 * Represents an asynchronous login/registration task used to authenticate
-	 * the user.
-	 */
-	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-		private final String mEmail;
-		private final String mPassword;
-
-		UserLoginTask(String email, String password) {
-			mEmail = email;
-			mPassword = password;
-		}
-
-		@Override
-		protected Boolean doInBackground(Void... params) {
-			// TODO: attempt authentication against a network service.
-
-			getAjaxReplyLogin(mEmail, mPassword);
-			
-			try {
-				// Simulate network access.
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				return false;
-			}
-
-			for (String credential : DUMMY_CREDENTIALS) {
-				String[] pieces = credential.split(":");
-				if (pieces[0].equals(mEmail)) {
-					// Account exists, return true if the password matches.
-					return pieces[1].equals(mPassword);
-				}
-			}
-
-			// TODO: register the new account here.
-			return true;
-		}
-		
-		public String getAjaxReplyLogin(String user,String pass){
-			String request = "";
-	        final AQuery aq = new AQuery(getApplicationContext());
-
-	        String url = new StringBuilder().append("http://avtolux.uz.ua/flow.php?user=").append(user)
-	        		.append("&password=")
-	                .append(pass).toString();
-
-	        aq.ajax(url, JSONArray.class, new AjaxCallback<JSONArray>() {
-
-				@Override
-	            public void callback(String url, JSONArray jSONArrayTemp, AjaxStatus status) {
-
-
-					if (jSONArrayTemp != null) {
-	                    Toast.makeText(aq.getContext(), "Error:" +jSONArrayTemp.toString(), Toast.LENGTH_LONG).show();
-
-	                    //successful ajax call, show status code and json content
-	                } else {
-
-	                    //ajax error, show error code
-	                    Toast.makeText(aq.getContext(), "Error:" + status.getMessage(), Toast.LENGTH_LONG).show();
-
-	                }
-	            }
-	        });
-
-	        
-	        
-	        
-			return request;
-		}
-
-
-		@Override
-		protected void onPostExecute(final Boolean success) {
-			mAuthTask = null;
-			showProgress(false);
-
-			if (success) {
-				finish();
-			} else {
-				mPasswordView.setError(getString(R.string.error_incorrect_password));
-				mPasswordView.requestFocus();
-			}
-		}
-
-		@Override
-		protected void onCancelled() {
-			mAuthTask = null;
-			showProgress(false);
-		}
-	}
+	
 }
