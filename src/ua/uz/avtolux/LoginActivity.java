@@ -154,7 +154,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 			focusView.requestFocus();
 		} else {
 	
-	        MessageDigest md = MessageDigest.getInstance("MD5");
+	        MessageDigest md = MessageDigest.getInstance("SHA1");
 	        md.update(password.getBytes());
 	
 	        byte[] resultByte = md.digest();
