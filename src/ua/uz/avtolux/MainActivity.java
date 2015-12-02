@@ -33,10 +33,10 @@ import android.widget.Toolbar;
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class MainActivity extends ActionBarActivity {
 
-	public String loginname=new String("");
-	public String hashpass=new String("");
-	public String resultlogin=new String("notok");
-	public String user_id=new String("0");
+	public String loginname = new String("");
+	public String hashpass = new String("");
+	public String resultlogin = new String("notok");
+	public String user_id = new String("0");
 
 	public boolean islogged = false;
 
@@ -72,7 +72,7 @@ public class MainActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		button = new Button(this);
 		button.setText("Login");
 		button.setId(1);
@@ -83,8 +83,7 @@ public class MainActivity extends ActionBarActivity {
 		button.setOnClickListener(new View.OnClickListener() {
 			public void onClick(final View v) {
 
-				Intent intent = new Intent(MainActivity.this,
-						LoginActivity.class);
+				Intent intent = new Intent(MainActivity.this, LoginActivity.class);
 				startActivityForResult(intent, LOGIN_RESULT_CODE);
 			}
 		});
@@ -92,9 +91,8 @@ public class MainActivity extends ActionBarActivity {
 
 		llayer = new TableLayout(this);
 		tRow = new TableRow(this);
-		tRow.setLayoutParams(new TableRow.LayoutParams(
-				TableRow.LayoutParams.FILL_PARENT,
-				TableRow.LayoutParams.WRAP_CONTENT));
+		tRow.setLayoutParams(
+				new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
 		tRow.addView(textViewUserID);
 		tRow.addView(button);
 		// llayer.addView(textViewUserID);
@@ -106,15 +104,14 @@ public class MainActivity extends ActionBarActivity {
 		mainFormLayer.addView(searchFormlayer);
 		mainFormLayer.addView(searchResultlayer);
 		mainFormLayer.setOrientation(LinearLayout.VERTICAL);
-		addContentView(mainFormLayer, new LinearLayout.LayoutParams(
-				Toolbar.LayoutParams.FILL_PARENT,
+		addContentView(mainFormLayer, new LinearLayout.LayoutParams(Toolbar.LayoutParams.FILL_PARENT,
 				LinearLayout.LayoutParams.WRAP_CONTENT));
 		try_login();
 	}
 
 	public void try_login() {
 		loadText();
-		SiteApi.savePass(getApplicationContext(),loginname,hashpass);
+		SiteApi.savePass(getApplicationContext(), loginname, hashpass);
 		islogged = false;
 		SiteApi.logged(loginname, hashpass, this);
 	}
@@ -160,17 +157,14 @@ public class MainActivity extends ActionBarActivity {
 			textViewUserID.setText("You are logged as - " + loginname);
 
 			llayerSearchTable = new TableLayout(searchFormlayer.getContext());
-			llayerSearchTable.setLayoutParams(new TableLayout.LayoutParams(
-					TableLayout.LayoutParams.FILL_PARENT,
+			llayerSearchTable.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT,
 					TableLayout.LayoutParams.WRAP_CONTENT));
 
 			llayerSearchRow = new TableRow(llayerSearchTable.getContext());
-			llayerSearchRow.setLayoutParams(new TableRow.LayoutParams(
-					TableLayout.LayoutParams.FILL_PARENT,
+			llayerSearchRow.setLayoutParams(new TableRow.LayoutParams(TableLayout.LayoutParams.FILL_PARENT,
 					TableRow.LayoutParams.WRAP_CONTENT));
 			llayerSearchRow1 = new TableRow(llayerSearchTable.getContext());
-			llayerSearchRow1.setLayoutParams(new TableRow.LayoutParams(
-					TableLayout.LayoutParams.FILL_PARENT,
+			llayerSearchRow1.setLayoutParams(new TableRow.LayoutParams(TableLayout.LayoutParams.FILL_PARENT,
 					TableRow.LayoutParams.WRAP_CONTENT));
 			llayerSearchTable.addView(llayerSearchRow);
 			llayerSearchTable.addView(llayerSearchRow1);
@@ -190,8 +184,7 @@ public class MainActivity extends ActionBarActivity {
 			llayerSearchButton.setGravity(Gravity.END);
 			llayerSearchButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
-					String searchText = new String(llayerSearchEditText
-							.getText().toString());
+					String searchText = new String(llayerSearchEditText.getText().toString());
 					searchProducts(searchText);
 
 				}
@@ -217,10 +210,9 @@ public class MainActivity extends ActionBarActivity {
 
 	public void drawsearchtable() {
 		searchResultlayer.removeAllViews();
-		llayerResultTableScrollView= new ScrollView(searchResultlayer.getContext());
+		llayerResultTableScrollView = new ScrollView(searchResultlayer.getContext());
 		llayerResultTable = new TableLayout(llayerResultTableScrollView.getContext());
-		llayerResultTable.setLayoutParams(new TableLayout.LayoutParams(
-				TableLayout.LayoutParams.FILL_PARENT,
+		llayerResultTable.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT,
 				TableLayout.LayoutParams.WRAP_CONTENT));
 
 		for (int i = 0; i < searchItem.length(); i++) {
@@ -229,14 +221,13 @@ public class MainActivity extends ActionBarActivity {
 				jsonData = searchItem.getJSONObject(i);
 
 				TableRow tRow = new TableRow(this);
-				tRow.setLayoutParams(new TableRow.LayoutParams(
-						TableRow.LayoutParams.FILL_PARENT,
+				tRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT,
 						TableRow.LayoutParams.WRAP_CONTENT));
 				// TextView text1 = new TextView(this);
 				// text1.setText(jsonData.getString("name"));
 				TextView text2 = new TextView(this);
 				text2.setText(SiteApi.convertToString(jsonData));
-				// text2.setLines(10);
+				text2.setLines(6);
 
 				final Button button = new Button(this);
 				button.setText("BUY");
@@ -249,35 +240,26 @@ public class MainActivity extends ActionBarActivity {
 						//
 						JSONObject itemToChouse = null;
 
-						AlertDialog.Builder builder = new AlertDialog.Builder(v
-								.getContext());
+						AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
 						try {
-							itemToChouse = searchItem.getJSONObject(button
-									.getId() - 1);
-							int quantity = Integer.valueOf(itemToChouse
-									.getString("quantity"));
+							itemToChouse = searchItem.getJSONObject(button.getId() - 1);
+							int quantity = Integer.valueOf(itemToChouse.getString("quantity"));
 							final String[] mCatsName = new String[quantity];
 							for (int i1 = 0; i1 < quantity; i1++) {
 								mCatsName[i1] = Integer.toString(i1 + 1);
 							}
-							builder.setTitle(itemToChouse.getString("name")); // заголовок
-																				// для
-																				// диалога
+							builder.setTitle(itemToChouse.getString("name")); 
 							final JSONObject finalItemToChouse = itemToChouse;
-							builder.setItems(mCatsName,
-									new DialogInterface.OnClickListener() {
-										@Override
-										public void onClick(
-												DialogInterface dialog, int item) {
-											// TODO Auto-generated method stub
-											Toast.makeText(
-													getApplicationContext(),
-													"kilk: " + mCatsName[item],
-													Toast.LENGTH_SHORT).show();
-											// makeOrder(v, finalItemToChouse,
-											// mCatsName[item], "XXX", "XXX");
-										}
-									});
+							builder.setItems(mCatsName, new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int item) {
+									// TODO Auto-generated method stub
+									Toast.makeText(getApplicationContext(), "kilk: " + mCatsName[item],
+											Toast.LENGTH_SHORT).show();
+									makeOrder(finalItemToChouse, mCatsName[item]);
+								}
+
+							});
 							builder.setCancelable(true);
 							AlertDialog dialog = builder.create();
 							dialog.show();
@@ -298,16 +280,27 @@ public class MainActivity extends ActionBarActivity {
 				tRow.addView(button);
 				tRow.addView(text2);
 
-				llayerResultTable.addView(tRow, new TableLayout.LayoutParams(
-						Toolbar.LayoutParams.FILL_PARENT,
+				llayerResultTable.addView(tRow, new TableLayout.LayoutParams(Toolbar.LayoutParams.FILL_PARENT,
 						Toolbar.LayoutParams.WRAP_CONTENT));
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		}
 		llayerResultTableScrollView.addView(llayerResultTable);
-		
+
 		searchResultlayer.addView(llayerResultTableScrollView);
+
+	}
+
+	public void makeOrder(JSONObject finalItemToChouse, String quantity) {
+		// TODO Auto-generated method stub
+
+		try {
+			SiteApi.makeOrder(finalItemToChouse, quantity, user_id, loginname, hashpass, this);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 

@@ -96,9 +96,6 @@ public class SiteApi {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("search", search);
 	    
-//		String url1 = new StringBuilder().append("http://avtolux.uz.ua/flow.php?search=").append(search).toString();
-	       
-//      Toast.makeText(aq1.getContext(), "Error1:" + url , Toast.LENGTH_LONG).show();
         aq1.ajax(url, params, JSONArray.class, new AjaxCallback<JSONArray>() {
             @Override
             public void callback(String url, JSONArray jSONArrayTemp, AjaxStatus status) {
@@ -133,6 +130,48 @@ public class SiteApi {
         }
         return sTemp;
     }
+
+	public static void makeOrder(JSONObject finalItemToChouse, String quantity, String user_id, String loginname,
+			String hashpass, MainActivity mainActivity) throws JSONException {
+		// TODO Auto-generated method stub
+	       final AQuery aq = new AQuery(mainActivity.getApplicationContext());
+
+			String url = URL_SITE;
+
+			Map<String, Object> params = new HashMap<String, Object>();
+			
+			params.put("quantity", quantity);
+			params.put("user_id", user_id);
+			params.put("name", finalItemToChouse.getString("name"));
+			params.put("product_id", finalItemToChouse.getString("product_id"));
+			params.put("priceusd", finalItemToChouse.getString("priceusd"));
+			params.put("user", loginname);
+			params.put("password", hashpass);
+			params.put("text", convertToString(finalItemToChouse));
+		    
+	        aq.ajax(url, params, JSONObject.class, new AjaxCallback<JSONObject>() {
+	            @Override
+	            public void callback(String url, JSONObject JSONObjectTemp, AjaxStatus status) {
+
+	            	//mainact1.searchItem = jSONArrayTemp;
+					
+	                if (JSONObjectTemp != null) {
+	                //	mainact1.drawsearchtable();
+	                	
+	                    //successful ajax call, show status code and json content
+	                } else {
+	                    //ajax error, show error code
+	                	
+	                    Toast.makeText(aq.getContext(), "Error:" + status.getMessage(), Toast.LENGTH_LONG).show();
+
+	                }
+	            }
+	        });
+
+		
+	}
+
+
     
 
 }
