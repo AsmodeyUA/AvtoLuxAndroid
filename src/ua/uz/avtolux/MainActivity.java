@@ -56,6 +56,7 @@ public class MainActivity extends ActionBarActivity {
 	public TextView llayerSearchTextView;
 	public EditText llayerSearchEditText;
 	public Button llayerSearchButton;
+	public Button llayerSearchButtonDescr;	
 
 	// Search Result
 	public JSONArray searchItem;
@@ -153,8 +154,8 @@ public class MainActivity extends ActionBarActivity {
 
 		if (resultlogin.equals("ok")) {
 			islogged = true;
-			button.setText("Change User");
-			textViewUserID.setText("You are logged as - " + loginname);
+			button.setText("перелогуватись");
+			textViewUserID.setText("Ви ввійшли як " + loginname);
 
 			llayerSearchTable = new TableLayout(searchFormlayer.getContext());
 			llayerSearchTable.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT,
@@ -170,7 +171,7 @@ public class MainActivity extends ActionBarActivity {
 			llayerSearchTable.addView(llayerSearchRow1);
 
 			llayerSearchTextView = new TextView(llayerSearchRow.getContext());
-			llayerSearchTextView.setText("Artikul:");
+			llayerSearchTextView.setText("Фільтр :");
 			llayerSearchTextView.setGravity(Gravity.START);
 			llayerSearchTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
 
@@ -180,12 +181,26 @@ public class MainActivity extends ActionBarActivity {
 			llayerSearchEditText.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 22);
 
 			llayerSearchButton = new Button(llayerSearchRow.getContext());
-			llayerSearchButton.setText("SEARCH");
+			llayerSearchButton.setText("Пошук(артикул)");
 			llayerSearchButton.setGravity(Gravity.END);
 			llayerSearchButton.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					String searchText = new String(llayerSearchEditText.getText().toString());
-					searchProducts(searchText);
+					String searchGoal = "artikul"; 
+					searchProducts(searchText, searchGoal);
+					
+
+				}
+
+			});
+			llayerSearchButtonDescr = new Button(llayerSearchRow.getContext());
+			llayerSearchButtonDescr.setText("Пошук(опис)");
+			llayerSearchButtonDescr.setGravity(Gravity.END);
+			llayerSearchButtonDescr.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					String searchText = new String(llayerSearchEditText.getText().toString());
+					String searchGoal = "description"; 
+					searchProducts(searchText, searchGoal);
 
 				}
 
@@ -193,6 +208,7 @@ public class MainActivity extends ActionBarActivity {
 			llayerSearchRow.addView(llayerSearchTextView);
 			llayerSearchRow.addView(llayerSearchEditText);
 			llayerSearchRow1.addView(llayerSearchButton);
+			llayerSearchRow1.addView(llayerSearchButtonDescr);
 
 			searchFormlayer.addView(llayerSearchTable);
 
@@ -204,8 +220,8 @@ public class MainActivity extends ActionBarActivity {
 		}
 	}
 
-	public void searchProducts(String searchText) {
-		SiteApi.getSearchResult(searchText, this);
+	public void searchProducts(String searchText, String SearchGoal) {
+		SiteApi.getSearchResult(searchText, SearchGoal, this);
 	}
 
 	public void drawsearchtable() {

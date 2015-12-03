@@ -87,7 +87,7 @@ public class SiteApi {
 
 	}
 	
-    public static boolean getSearchResult(String search, final MainActivity mainact1) {
+    public static boolean getSearchResult(String search, String goal, final MainActivity mainact1) {
 
         final AQuery aq1 = new AQuery(mainact1.getApplicationContext());
 
@@ -95,6 +95,7 @@ public class SiteApi {
 
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("search", search);
+		params.put("goal", goal);
 	    
         aq1.ajax(url, params, JSONArray.class, new AjaxCallback<JSONArray>() {
             @Override
