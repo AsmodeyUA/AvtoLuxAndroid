@@ -69,6 +69,12 @@ public class MainActivity extends ActionBarActivity {
 
 	private static final int LOGIN_RESULT_CODE = 1;
 
+	// to calculate which items was choused for viewing analogs
+	private static final int SHIFT_ANALOG_BUTTON_ID = 50;
+	
+	// to calculate which analog button was choused for buying
+	private static final int KOEF_ANALOG_BUTTON_ID = 100;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -230,15 +236,35 @@ public class MainActivity extends ActionBarActivity {
 		llayerResultTable = new TableLayout(llayerResultTableScrollView.getContext());
 		llayerResultTable.setLayoutParams(new TableLayout.LayoutParams(TableLayout.LayoutParams.FILL_PARENT,
 				TableLayout.LayoutParams.WRAP_CONTENT));
+		
+		drawdata(searchItem,true, llayerResultTable);
+		
+		llayerResultTableScrollView.addView(llayerResultTable);
 
-		for (int i = 0; i < searchItem.length(); i++) {
+		searchResultlayer.addView(llayerResultTableScrollView);
+
+	}
+
+	
+	public void drawdata(final JSONArray drawItem, boolean showAnalogButton, TableLayout tableResAnalogLayout){
+
+		for (int i = 0; i < drawItem.length(); i++) {
 			JSONObject jsonData;
 			try {
-				jsonData = searchItem.getJSONObject(i);
+				jsonData = drawItem.getJSONObject(i);
 
 				TableRow tRow = new TableRow(this);
 				tRow.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT,
 						TableRow.LayoutParams.WRAP_CONTENT));
+				
+				final TableLayout tRowAnalog = new TableLayout(this);
+				tRowAnalog.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT,
+						TableRow.LayoutParams.WRAP_CONTENT));
+				
+				LinearLayout tRowIn = new LinearLayout(this);;
+				//tRowIn.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT,
+				//		LinearLayout.LayoutParams.WRAP_CONTENT));
+				tRowIn.setOrientation(LinearLayout.VERTICAL);
 				// TextView text1 = new TextView(this);
 				// text1.setText(jsonData.getString("name"));
 				TextView text2 = new TextView(this);
@@ -246,9 +272,14 @@ public class MainActivity extends ActionBarActivity {
 				text2.setLines(6);
 
 				final Button button = new Button(this);
-				button.setText("BUY");
+				button.setText("Замовити");
 
-				button.setId(i + 1);
+				if (showAnalogButton){
+					button.setId(i+1);
+				} else {
+					button.setId(KOEF_ANALOG_BUTTON_ID*(i+1)+1);
+				} 
+				
 				button.setOnClickListener(new View.OnClickListener() {
 					public void onClick(final View v) {
 						// Perform action on click
@@ -258,7 +289,13 @@ public class MainActivity extends ActionBarActivity {
 
 						AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
 						try {
-							itemToChouse = searchItem.getJSONObject(button.getId() - 1);
+							if (button.getId()<KOEF_ANALOG_BUTTON_ID){
+								itemToChouse = drawItem.getJSONObject(button.getId() - 1);
+							} else {
+								//int number_i = (button.getId()-1)
+								itemToChouse = drawItem.getJSONObject(button.getId() - 1);
+							}
+							
 							int quantity = Integer.valueOf(itemToChouse.getString("quantity"));
 							final String[] mCatsName = new String[quantity];
 							for (int i1 = 0; i1 < quantity; i1++) {
@@ -283,31 +320,50 @@ public class MainActivity extends ActionBarActivity {
 						} catch (JSONException e) {
 							e.printStackTrace();
 						}
-
-						// Toast.makeText(aq.getContext(),
-						// Integer.toString(button.getId()),
-						// Toast.LENGTH_LONG).show();
-
+					
 					}
 
 				});
+				tRowIn.addView(button);
+				
+				if (showAnalogButton){
+					final Button buttonAnalog = new Button(this);
+					buttonAnalog.setText("Аналоги");
+					buttonAnalog.setId(i + SHIFT_ANALOG_BUTTON_ID + 1);
+					
+					buttonAnalog.setOnClickListener(new View.OnClickListener() {
+						public void onClick(final View v) {
+							// Perform action on click
+							JSONObject itemToChouse = null;
 
-				// tRow.addView(text1);
-				tRow.addView(button);
+							try {
+								itemToChouse = drawItem.getJSONObject(button.getId() - SHIFT_ANALOG_BUTTON_ID -1);
+								JSONArray drawItemAnalog = itemToChouse.getJSONArray("analog");
+								drawdata(drawItemAnalog, false, tRowAnalog);
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
+						
+						}
+
+					});					
+					
+					tRowIn.addView(buttonAnalog);
+				}				
+				
+				tRow.addView(tRowIn);
 				tRow.addView(text2);
-
-				llayerResultTable.addView(tRow, new TableLayout.LayoutParams(Toolbar.LayoutParams.FILL_PARENT,
+				tableResAnalogLayout.addView(tRow, new TableLayout.LayoutParams(Toolbar.LayoutParams.FILL_PARENT,
+						Toolbar.LayoutParams.WRAP_CONTENT));
+				tRowAnalog.addView(tRow, new TableLayout.LayoutParams(Toolbar.LayoutParams.FILL_PARENT,
 						Toolbar.LayoutParams.WRAP_CONTENT));
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		}
-		llayerResultTableScrollView.addView(llayerResultTable);
-
-		searchResultlayer.addView(llayerResultTableScrollView);
-
+		
 	}
-
+	
 	public void makeOrder(JSONObject finalItemToChouse, String quantity) {
 		// TODO Auto-generated method stub
 
