@@ -93,6 +93,9 @@ public class SiteApi {
 
 		String url = URL_SITE;
 
+ //       Toast.makeText(aq1.getContext(), "Error2:" + search.toString(), Toast.LENGTH_LONG).show();
+
+		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("search", search);
 		params.put("goal", goal);
@@ -104,6 +107,8 @@ public class SiteApi {
             	mainact1.searchItem = jSONArrayTemp;
 				
                 if (jSONArrayTemp != null) {
+ //                   Toast.makeText(aq1.getContext(), "Error2:" + jSONArrayTemp.toString(), Toast.LENGTH_LONG).show();
+
                 	mainact1.drawsearchtable();
                     //successful ajax call, show status code and json content
                 } else {

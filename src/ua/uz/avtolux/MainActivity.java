@@ -292,10 +292,11 @@ public class MainActivity extends ActionBarActivity {
 							if (button.getId()<KOEF_ANALOG_BUTTON_ID){
 								itemToChouse = drawItem.getJSONObject(button.getId() - 1);
 							} else {
-								//int number_i = (button.getId()-1)
-								itemToChouse = drawItem.getJSONObject(button.getId() - 1);
-							}
-							
+							//	Toast.makeText(getApplicationContext(), "ID: " + button.getId(),
+								//		Toast.LENGTH_SHORT).show();									
+								int number_i = (((button.getId()-1)/100)-1);
+								itemToChouse = drawItem.getJSONObject(number_i);
+							}					
 							int quantity = Integer.valueOf(itemToChouse.getString("quantity"));
 							final String[] mCatsName = new String[quantity];
 							for (int i1 = 0; i1 < quantity; i1++) {
@@ -307,7 +308,7 @@ public class MainActivity extends ActionBarActivity {
 								@Override
 								public void onClick(DialogInterface dialog, int item) {
 									// TODO Auto-generated method stub
-									Toast.makeText(getApplicationContext(), "kilk: " + mCatsName[item],
+									Toast.makeText(getApplicationContext(), "Замовлено кількість: " + mCatsName[item],
 											Toast.LENGTH_SHORT).show();
 									makeOrder(finalItemToChouse, mCatsName[item]);
 								}
@@ -335,10 +336,12 @@ public class MainActivity extends ActionBarActivity {
 						public void onClick(final View v) {
 							// Perform action on click
 							JSONObject itemToChouse = null;
-
+							buttonAnalog.setVisibility(View.INVISIBLE);
 							try {
-								itemToChouse = drawItem.getJSONObject(button.getId() - SHIFT_ANALOG_BUTTON_ID -1);
+								itemToChouse = drawItem.getJSONObject(buttonAnalog.getId() - SHIFT_ANALOG_BUTTON_ID -1);
 								JSONArray drawItemAnalog = itemToChouse.getJSONArray("analog");
+								
+								tRowAnalog.removeAllViews();
 								drawdata(drawItemAnalog, false, tRowAnalog);
 							} catch (JSONException e) {
 								e.printStackTrace();
@@ -355,7 +358,7 @@ public class MainActivity extends ActionBarActivity {
 				tRow.addView(text2);
 				tableResAnalogLayout.addView(tRow, new TableLayout.LayoutParams(Toolbar.LayoutParams.FILL_PARENT,
 						Toolbar.LayoutParams.WRAP_CONTENT));
-				tRowAnalog.addView(tRow, new TableLayout.LayoutParams(Toolbar.LayoutParams.FILL_PARENT,
+				tableResAnalogLayout.addView(tRowAnalog, new TableLayout.LayoutParams(Toolbar.LayoutParams.FILL_PARENT,
 						Toolbar.LayoutParams.WRAP_CONTENT));
 			} catch (JSONException e) {
 				e.printStackTrace();
