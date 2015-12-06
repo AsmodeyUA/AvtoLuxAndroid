@@ -11,8 +11,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -305,7 +303,9 @@ public class MainActivity extends ActionBarActivity {
 							for (int i1 = 0; i1 < quantity; i1++) {
 								mCatsName[i1] = Integer.toString(i1 + 1);
 							}
-							builder.setTitle(itemToChouse.getString("name")); 
+							
+							builder.setTitle(SiteApi.codeID(itemToChouse.getString("name"),3)); 
+
 							final JSONObject finalItemToChouse = itemToChouse;
 							builder.setItems(mCatsName, new DialogInterface.OnClickListener() {
 								@Override

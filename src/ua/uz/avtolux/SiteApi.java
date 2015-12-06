@@ -141,11 +141,8 @@ public class SiteApi {
 				quantity=">1";break;
 			}
 
-			String artikul = jsonData.getString("name");
-			int lenArtikul = artikul.length();
-			artikul = artikul.substring(0, 3);
-			for(int j=2;j<lenArtikul;j++) artikul = artikul+"X";
-      	
+			String artikul = codeID(jsonData.getString("name"),3);
+
 			int quantityprice = Integer.valueOf((int) (jsonData.getDouble("priceusd")+0.5));
      	
 			sTemp += "Назва: " + jsonData.getString("description");
@@ -160,6 +157,15 @@ public class SiteApi {
 			e.printStackTrace();
 		}
 		return sTemp;
+	}
+	public static String codeID(String name, int showFirstCharsNumber){
+
+		String tempArtikul = name.substring(0, showFirstCharsNumber);
+		
+		for(int j=showFirstCharsNumber;j<name.length();j++) tempArtikul = tempArtikul+"X";
+		
+		return tempArtikul;
+		
 	}
 
 	public static void makeOrder(JSONObject finalItemToChouse, String quantity, String user_id, String loginname,
