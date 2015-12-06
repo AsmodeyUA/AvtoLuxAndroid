@@ -11,6 +11,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -20,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TableLayout;
@@ -271,9 +274,9 @@ public class MainActivity extends ActionBarActivity {
 				text2.setText(SiteApi.convertToString(jsonData));
 				text2.setLines(6);
 
-				final Button button = new Button(this);
-				button.setText("Замовити");
-
+				final ImageButton button = new ImageButton(this);
+				button.setImageDrawable(getResources().getDrawable(R.drawable.ic_add_shopping_cart_black_24dp));
+				
 				if (showAnalogButton){
 					button.setId(i+1);
 				} else {

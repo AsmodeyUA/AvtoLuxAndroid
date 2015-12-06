@@ -74,7 +74,7 @@ public class SiteApi {
 
 		return true;
 	}
-	
+
 	public static void savePass(Context c, String user, String hash) {
 		SharedPreferences sPref;
 		sPref =c.getSharedPreferences(USERDATA,  Context.MODE_PRIVATE);
@@ -86,98 +86,123 @@ public class SiteApi {
 		ed.commit();
 
 	}
-	
-    public static boolean getSearchResult(String search, String goal, final MainActivity mainact1) {
 
-        final AQuery aq1 = new AQuery(mainact1.getApplicationContext());
+	public static boolean getSearchResult(String search, String goal, final MainActivity mainact1) {
+
+		final AQuery aq1 = new AQuery(mainact1.getApplicationContext());
 
 		String url = URL_SITE;
 
- //       Toast.makeText(aq1.getContext(), "Error2:" + search.toString(), Toast.LENGTH_LONG).show();
+		//       Toast.makeText(aq1.getContext(), "Error2:" + search.toString(), Toast.LENGTH_LONG).show();
 
-		
+
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("search", search);
 		params.put("goal", goal);
-	    
-        aq1.ajax(url, params, JSONArray.class, new AjaxCallback<JSONArray>() {
-            @Override
-            public void callback(String url, JSONArray jSONArrayTemp, AjaxStatus status) {
 
-            	mainact1.searchItem = jSONArrayTemp;
-				
-                if (jSONArrayTemp != null) {
- //                   Toast.makeText(aq1.getContext(), "Error2:" + jSONArrayTemp.toString(), Toast.LENGTH_LONG).show();
+		aq1.ajax(url, params, JSONArray.class, new AjaxCallback<JSONArray>() {
+			@Override
+			public void callback(String url, JSONArray jSONArrayTemp, AjaxStatus status) {
 
-                	mainact1.drawsearchtable();
-                    //successful ajax call, show status code and json content
-                } else {
-                    //ajax error, show error code
-                	
-                    Toast.makeText(aq1.getContext(), "Error2:" + status.getMessage(), Toast.LENGTH_LONG).show();
+				mainact1.searchItem = jSONArrayTemp;
 
-                }
-            }
-        });
+				if (jSONArrayTemp != null) {
+					//Toast.makeText(aq1.getContext(), "Error2:" + jSONArrayTemp.toString(), Toast.LENGTH_LONG).show();
 
-        return true;
-    }
-    
-    public static String convertToString(JSONObject jsonData) {
-        String sTemp = null;
-        try {
-            sTemp = "Name: " + jsonData.getString("name");
-            sTemp += "\nKilk: " + jsonData.getString("quantity");
-            sTemp += "\nCena: " + jsonData.getString("priceusd");
-            sTemp += "\nID: " + jsonData.getString("product_id");
-            sTemp += "\nInfo: " + jsonData.getString("description");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return sTemp;
-    }
+					mainact1.drawsearchtable();
+					//successful ajax call, show status code and json content
+				} else {
+					//ajax error, show error code
+
+					Toast.makeText(aq1.getContext(), "Error2:" + status.getMessage(), Toast.LENGTH_LONG).show();
+
+				}
+			}
+		});
+
+		return true;
+	}
+
+	/**
+	 * @param jsonData
+	 * @return
+	 */
+	public static String convertToString(JSONObject jsonData) {
+		String sTemp = "";
+		try {
+			int quantitytemp = Integer.valueOf(jsonData.getString("quantity"));
+			String quantity;
+			switch (quantitytemp){
+			case 0:
+				quantity="0";break;
+			case 1:
+				quantity="1";break;
+			default:
+				quantity=">1";break;
+			}
+
+			String artikul = jsonData.getString("name");
+			int lenArtikul = artikul.length();
+			artikul = artikul.substring(0, 3);
+			for(int j=2;j<lenArtikul;j++) artikul = artikul+"X";
+      	
+			int quantityprice = Integer.valueOf((int) (jsonData.getDouble("priceusd")+0.5));
+     	
+			sTemp += "Назва: " + jsonData.getString("description");
+			// sTemp += "\nКод: " + jsonData.getString("name");
+			sTemp += "\nКод: " + artikul;
+			// sTemp += "\nЦіна: " + jsonData.getString("priceusd");
+			sTemp += "\nЦіна: " + quantityprice;
+			sTemp += "\nКількість: " + quantity;
+
+			//            sTemp += "\nID: " + jsonData.getString("product_id");
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return sTemp;
+	}
 
 	public static void makeOrder(JSONObject finalItemToChouse, String quantity, String user_id, String loginname,
 			String hashpass, MainActivity mainActivity) throws JSONException {
 		// TODO Auto-generated method stub
-	       final AQuery aq = new AQuery(mainActivity.getApplicationContext());
+		final AQuery aq = new AQuery(mainActivity.getApplicationContext());
 
-			String url = URL_SITE;
+		String url = URL_SITE;
 
-			Map<String, Object> params = new HashMap<String, Object>();
-			
-			params.put("quantity", quantity);
-			params.put("user_id", user_id);
-			params.put("name", finalItemToChouse.getString("name"));
-			params.put("product_id", finalItemToChouse.getString("product_id"));
-			params.put("priceusd", finalItemToChouse.getString("priceusd"));
-			params.put("user", loginname);
-			params.put("password", hashpass);
-			params.put("text", convertToString(finalItemToChouse));
-		    
-	        aq.ajax(url, params, JSONObject.class, new AjaxCallback<JSONObject>() {
-	            @Override
-	            public void callback(String url, JSONObject JSONObjectTemp, AjaxStatus status) {
+		Map<String, Object> params = new HashMap<String, Object>();
 
-	            	//mainact1.searchItem = jSONArrayTemp;
-					
-	                if (JSONObjectTemp != null) {
-	                //	mainact1.drawsearchtable();
-	                	
-	                    //successful ajax call, show status code and json content
-	                } else {
-	                    //ajax error, show error code
-	                	
-	                    Toast.makeText(aq.getContext(), "Error:" + status.getMessage(), Toast.LENGTH_LONG).show();
+		params.put("quantity", quantity);
+		params.put("user_id", user_id);
+		params.put("name", finalItemToChouse.getString("name"));
+		params.put("product_id", finalItemToChouse.getString("product_id"));
+		params.put("priceusd", finalItemToChouse.getString("priceusd"));
+		params.put("user", loginname);
+		params.put("password", hashpass);
+		params.put("text", convertToString(finalItemToChouse));
 
-	                }
-	            }
-	        });
+		aq.ajax(url, params, JSONObject.class, new AjaxCallback<JSONObject>() {
+			@Override
+			public void callback(String url, JSONObject JSONObjectTemp, AjaxStatus status) {
 
-		
+				//mainact1.searchItem = jSONArrayTemp;
+
+				if (JSONObjectTemp != null) {
+					//	mainact1.drawsearchtable();
+
+					//successful ajax call, show status code and json content
+				} else {
+					//ajax error, show error code
+
+					Toast.makeText(aq.getContext(), "Error:" + status.getMessage(), Toast.LENGTH_LONG).show();
+
+				}
+			}
+		});
+
+
 	}
 
 
-    
+
 
 }
